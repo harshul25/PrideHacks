@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<head>
+    <link rel="icon" href="pride.png">
+</head>
+<html lang="en">
+<title>Words of Pride</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+ <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+ <!-- TODO: Add SDKs for Firebase products that you want to use
+ https://firebase.google.com/docs/web/setup#available-libraries -->
+ <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-analytics.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-database.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-auth.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<style>
+body {font-family: "Lato", sans-serif}
+p,h1,button {font-family: "Montserrat", sans-serif}
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  width: auto;
+  padding: 10px 18px;
+  background-color: #f44336;
+}
+
+/* Center the image and position the close button */
+.logincontainer, .messageConatainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+  position: relative;
+}
+
+
+.container {
+  padding: 16px;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)} 
+  to {-webkit-transform: scale(1)}
+}
+  
+@keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+
+ul{
+    max-height: 200px;
+    overflow: auto;
+}
+
+li {
+    list-style-type: none;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 10px;
+    color: #a9a5ac;
+    width: 50%;
+}
+
+li span {
+    font-style: italic;
+    font-weight: bolder;
+    color: #b5b0b9;
+}
+.send {
+    text-align: right;
+    margin-left: 50%;
+}
+
+.send span {
+    margin-left: 5px;
+}
+</style>
+<body onload="refreshQuote()">
+
+<!-- Header -->
+<header class="w3-container w3-center" style="padding:128px 16px; background: #e09b84f5">
+  <h1 class="w3-margin w3-jumbo">
+      <span style="color: #B0E0E6;">W</span>
+      <span style="color: #FFC0CB;">O</span>
+      <span style="color: #B0E0E6;">R</span>
+      <span style="color: #FFC0CB;">D</span>
+      <span style="color: #B0E0E6;">S</span>
+    </h1>
+  <p class="w3-xlarge" style="color: azure;">of</p>
+  <h1 class="w3-margin w3-jumbo">
+    <span style="color: #FF6347;">P</span>
+    <span style="color: #FFA07A;">R</span>
+    <span style="color: #FFFACD;">I</span>
+    <span style="color: #90EE90;">D</span>
+    <span style="color: #ADD8E6;">E</span>
+    <span style="color: #E6E6FA;">!</span>
+  </h1>
+  <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" style="border-radius: 12px;" onclick="document.getElementById('login-modal').style.display='block'">Spread the love &#9829;</button>
+</header>
+
+<!-- Navbar -->
+<div class="w3-top">
+    <div class="w3-bar w3-card w3-left-align w3-large" style="color: beige;">
+      <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+    </div>
+</div>
+
+
+<div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
+    <h1 class="w3-margin w3-xlarge" id="quote"></h1>
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity">  
+  <div class="w3-xlarge w3-padding-32">
+    <i class="fa fa-facebook-official w3-hover-opacity"></i>
+    <i class="fa fa-instagram w3-hover-opacity"></i>
+    <i class="fa fa-snapchat w3-hover-opacity"></i>
+    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
+    <i class="fa fa-twitter w3-hover-opacity"></i>
+    <i class="fa fa-linkedin w3-hover-opacity"></i>
+ </div>
+</footer>
+
+<!--login modal -->
+<div id="login-modal" class="modal">
+  
+    <form class="modal-content animate">
+      <div class="logincontainer">
+        <span onclick="document.getElementById('login-modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+      </div>
+  
+      <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" id="username" required>
+  
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" id="password" required>
+          
+        <button type="button" onclick="signIn()">Login</button>
+        <button type="button" onclick="newUser()">Sign up</button>
+      </div>
+  
+      <div class="container" style="background-color:#f1f1f1">
+        <button type="button" onclick="document.getElementById('login-modal').style.display='none'">Cancel</button>
+        <span class="psw">Forgot <a href="#">password?</a></span>
+      </div>
+    </form>
+  </div>
+
+  <!-- chatbox modal-->
+  <div id="chatModal" class="modal">
+
+    <div class="modal-content">
+      <span onclick="signOut()" class="close">&times;</span>
+      <p class="w3-center">Welcome, to the community! 🌈</p>
+      <div class="container">
+        <ul id="messages"></ul>
+      </div>
+      <div class="container">
+        <label for="Name"><b>Name</b></label>
+        <input type="text" placeholder="Write your name" name="message" id="send_name" required>
+        <label for="message"><b>Message</b></label>
+        <input type="text" placeholder="Send positive vibes" name="message" id="send" required>
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="sendMessage()">Send &#128231;</button>
+        </div>
+      </div>
+
+    </div>
+  
+  </div>
+  
+
+<script>
+    // Login firebase
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+    apiKey: "AIzaSyCzcFrX2jj_mIWqZCkt2nl0xdquTeB0tGY",
+    authDomain: "break-f6445.firebaseapp.com",
+    databaseURL: "https://break-f6445-default-rtdb.firebaseio.com",
+    projectId: "break-f6445",
+    storageBucket: "break-f6445.appspot.com",
+    messagingSenderId: "693089796169",
+    appId: "1:693089796169:web:b21d47553f5c737d13ff98"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    function signIn(){
+    var email = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    firebase.auth().signInWithEmailAndPassword(email,password).catch(function(error){
+        //if login failed then handle the error
+        console.log(error);
+        return;
+    });
+    firebase.auth().onAuthStateChanged(function(user){
+            if(user){
+                //for successful login send proper revert
+                document.getElementById('login-modal').style.display='none';
+                document.getElementById('chatModal').style.display='block';
+            }else{
+                //else revert a fail message
+               
+            }
+        });
+
+        }
+
+        function newUser(){
+            var email = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            firebase.auth().createUserWithEmailAndPassword(email, password).then((userCredential) => {
+            // Signed in 
+            console.log("success");
+            document.getElementById('login-modal').style.display='none';
+            document.getElementById('chatModal').style.display='block';
+            var user = userCredential.user;
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+        function signOut(){
+            document.getElementById('chatModal').style.display='none';
+            firebase.auth().signOut().then(function(){
+                //successful logout
+                console.log("successful logout");
+                document.getElementById("messages").innerHTML = "";
+
+            }), function(error){
+                //error in logging out
+                console.log("error");
+            }
+        }
+
+        function sendMessage() {
+
+
+            // get values to be submitted
+            const timestamp = Date.now();
+            const message = document.getElementById("send").value;
+            const username = document.getElementById("send_name").value;
+            const uID = firebase.auth().currentUser.uid;
+
+
+            // clear the input box
+            document.getElementById("send").value = "";
+
+
+            // create db collection and send in the data
+            firebase.database().ref("messages/" + timestamp).set({
+                username,
+                message,
+                uID
+            });
+}
+
+    // display the messages
+    // reference the collection created earlier
+    const fetchChat = firebase.database().ref("messages/");
+    var randIndex = 0;
+    colors = ['#FF6347','#FFA07A','#FFFACD','#90EE90','#ADD8E6','#E6E6FA']
+    // check for new messages using the onChildAdded event listener
+
+    firebase.auth().onAuthStateChanged(function(user){
+            if(user){
+                document.getElementById("messages").innerHTML = "";
+                //for successful login send proper revert
+                fetchChat.on("child_added", function (snapshot) {
+                const messages = snapshot.val();
+                const message = `<li style="background-color:${
+                    colors[randIndex]
+                }" class="${
+                    firebase.auth().currentUser.uid === messages.uID ? "send" : "receive"
+                }"><span>${messages.username}: </span>${" "+messages.message}</li>`;
+                // append the message on the page
+                if (randIndex >= colors.length-1){
+                    randIndex = 0;
+                }else{
+                    randIndex +=1;
+                }
+                document.getElementById("messages").innerHTML += message;
+                });
+            }else{
+                //else revert a fail message
+               
+            }
+        });
+
+
+</script>
+
+<script>
+    // Get refreshed quotes
+    function refreshQuote(){
+    var quotes = ["Openness may not completely disarm prejudice, but it's a good place to start.",
+                    "When all Americans are treated as equal, no matter who they are or whom they love, we are all more free.",
+                    "The only queer people are those who don't love anybody.",
+                    "This world would be a whole lot better if we just made an effort to be less horrible to one another.",
+                    "Why is it that, as a culture, we are more comfortable seeing two men holding guns than holding hands?",
+                    "I believe that no one should ever have to choose between a career we love and living our lives with authenticity and integrity",
+                    "Never be bullied into silence. Never allow yourself to be made a victim. Accept no one's definition of your life; define yourself.",
+                    "I've been embraced by a new community. That's what happens when youre finally honest about who you are; you find others like you.",
+                    "We should indeed keep calm in the face of difference, and live our lives in a state of inclusion and wonder at the diversity of humanity."
+                    ];
+    var randIndex = Math.floor(Math.random() * quotes.length);
+
+
+     document.getElementById("quote").innerHTML = "Quote of the day: "+quotes[randIndex];
+    }
+</script>
+
+
+</body>
+</html>
